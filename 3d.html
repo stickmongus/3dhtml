@@ -1024,7 +1024,8 @@
                         const len = Math.hypot(dx, dz) || 1;
                         pendingDashPlat.dataset.dirX = String(dx / len);
                         pendingDashPlat.dataset.dirZ = String(dz / len);
-                        const yawDeg = (-Math.atan2(dz, dx) * 180) / Math.PI + 90;
+                        // Local -Z is forward for the arrow; rotating (0, 0, -1) by yaw around +Y gives (-sin(yaw), 0, -cos(yaw))
+                        const yawDeg = (Math.atan2(-dx, -dz) * 180) / Math.PI;
                         pendingDashPlat.setAttribute('rotation', `0 ${yawDeg} 0`);
                         pendingDashPlat = null;
                         pendingDashPos = null;
@@ -1058,12 +1059,20 @@
                         plat.setAttribute('material', 'emissive: #00ff44; emissiveIntensity: 0.8; metalness: 0.8');
                         plat.classList.add('dash-pad');
 
+                        const shaft = document.createElement('a-box');
+                        shaft.setAttribute('position', '0 0.32 0.3');
+                        shaft.setAttribute('width', '0.45');
+                        shaft.setAttribute('height', '0.22');
+                        shaft.setAttribute('depth', '1.6');
+                        shaft.setAttribute('material', 'color: #ffffff; emissive: #ffffff; emissiveIntensity: 1');
+                        plat.appendChild(shaft);
+
                         const arrow = document.createElement('a-cone');
                         arrow.setAttribute('position', '0 0.35 -1.1');
                         arrow.setAttribute('rotation', '-90 0 0');
-                        arrow.setAttribute('radius-bottom', '0.7');
+                        arrow.setAttribute('radius-bottom', '0.75');
                         arrow.setAttribute('radius-top', '0.02');
-                        arrow.setAttribute('height', '1.6');
+                        arrow.setAttribute('height', '1.4');
                         arrow.setAttribute('material', 'color: #ffffff; emissive: #ffffff; emissiveIntensity: 1');
                         plat.appendChild(arrow);
 
